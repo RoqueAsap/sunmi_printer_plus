@@ -1,0 +1,18 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="br.com.brasizza.sunmi_printer_plus" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="16"
+6-->/Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+7        android:targetSdkVersion="16" />
+7-->/Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+8
+9    <queries>
+9-->/Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:3:5-5:15
+10        <package android:name="woyou.aidlservice.jiuiv5" />
+10-->/Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:4:7-58
+10-->/Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:4:16-55
+11    </queries>
+12
+13</manifest>

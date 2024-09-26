@@ -1,0 +1,4 @@
+#Thu Sep 26 10:27:04 EST 2024
+base.0=/Users/rbar/Documents/GitHub/sunmi_printer_plus/example/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

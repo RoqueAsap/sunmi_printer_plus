@@ -1,0 +1,31 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:1:1-6:12
+INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:1:1-6:12
+INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:1:1-6:12
+	package
+		ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:2:3-47
+		INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+		INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:1:11-69
+queries
+ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:3:5-5:15
+package#woyou.aidlservice.jiuiv5
+ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:4:7-58
+	android:name
+		ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml:4:16-55
+uses-sdk
+INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+		ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+		INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+		ADDED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml
+		INJECTED from /Users/rbar/Documents/GitHub/sunmi_printer_plus/android/src/main/AndroidManifest.xml

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'column_maker.dart';
@@ -13,6 +15,9 @@ import 'sunmi_style.dart';
 ///With this class you can print everything you like. If you want to print a text, qrcode, barcode, bold text, bigger text or the smallest text possible.
 ///Your imagination is the limit!
 class SunmiPrinter {
+  static const double paperWidth = 382;
+  static const double _textScale = 2;
+
   static final Map _printerStatus = {
     'ERROR': 'Something went wrong.',
     'NORMAL': 'Works normally',
@@ -531,4 +536,169 @@ class SunmiPrinter {
     return await _channel
         .invokeMethod("LCD_MULTI_STRING", {"text": texts, "align": aligns});
   }
+
+  //CUSTOM TEXT STYLE
+  static Future<void> niceHr({double size = 5}) async {
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+
+    final paintBackground = Paint()
+      ..style = PaintingStyle.fill
+      ..color = const Color(0xFFFFFFFF);
+    canvas.drawRect(
+        Rect.fromLTWH(0, 0, paperWidth, size.toInt() + 2), paintBackground);
+    final linePaint = Paint()
+      ..strokeWidth = size
+      ..color = Colors.black;
+
+    canvas.drawLine(Offset(0, size), Offset(paperWidth, size), linePaint);
+
+    final picture = recorder.endRecording();
+    await _printImage(
+        PrinterCustomWidget(picture: picture, height: size.toInt() + 2));
+  }
+
+  static Future<void> _printImage(PrinterCustomWidget customImage) async {
+    final img = await (await customImage.picture
+            .toImage(paperWidth.toInt(), customImage.height))
+        .toByteData(format: ImageByteFormat.png);
+
+    Uint8List imageUint8List =
+        img!.buffer.asUint8List(img.offsetInBytes, img.lengthInBytes);
+
+    // List<int> imageListInt = imageUint8List.cast<int>();
+    // String imageString = base64.encode(imageListInt);
+    await printImage(imageUint8List);
+  }
+
+  static PrinterCustomWidget customText(PrinterCustomText customPrint) {
+    final TextPainter textPainter = TextPainter(
+        text: customPrint.text,
+        textAlign: customPrint.textAlign,
+        textDirection: TextDirection.ltr,
+        textScaleFactor: _textScale)
+      ..layout(maxWidth: paperWidth, minWidth: paperWidth);
+    final height = textPainter.height;
+
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+    final paintBackground = Paint()
+      ..style = PaintingStyle.fill
+      ..color = Colors.white;
+    canvas.drawRect(
+        Rect.fromLTWH(0, 0, paperWidth, height + 1), paintBackground);
+
+    textPainter.paint(canvas, const Offset(0, 0));
+
+    final picture = recorder.endRecording();
+    return PrinterCustomWidget(picture: picture, height: height.toInt());
+  }
+
+  static PrinterCustomWidget columnLayoutText(
+      List<SunmiCustomTextColumn> columns, int padding) {
+    assert(columns.isNotEmpty);
+    final List<TextPainter> painters = [];
+    final int sumFlexs =
+        columns.map((e) => e.flex).toList().reduce((a, b) => a + b);
+    int maxHeight = 0;
+    for (var column in columns) {
+      final width =
+          column.flex * (paperWidth - padding * columns.length - 1) / sumFlexs;
+      final paint = TextPainter(
+          text: column.text.text,
+          textAlign: column.text.textAlign,
+          textDirection: TextDirection.ltr,
+          textScaleFactor: _textScale)
+        ..layout(maxWidth: width, minWidth: width);
+      painters.add(paint);
+      if (maxHeight < paint.height) maxHeight = paint.height.toInt();
+    }
+
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+    final paintBackground = Paint()
+      ..style = PaintingStyle.fill
+      ..color = Colors.white;
+    canvas.drawRect(
+        Rect.fromLTWH(0, 0, paperWidth, maxHeight.toDouble()), paintBackground);
+    double actualPadding = 0;
+    for (int i = 0; i < painters.length; i++) {
+      painters[i].paint(
+          canvas,
+          Offset(
+              actualPadding + i * padding,
+              _getVerticalPosition(
+                  columns[i].align, painters[i].height, maxHeight.toDouble())));
+      actualPadding += columns[i].flex *
+          (paperWidth - padding * columns.length - 1) /
+          sumFlexs;
+    }
+
+    final picture = recorder.endRecording();
+
+    return PrinterCustomWidget(picture: picture, height: maxHeight);
+  }
+
+  static Future<void> printCustomText(PrinterCustomText customPrint) async {
+    _printImage(customText(customPrint));
+  }
+
+  static Future<void> printColumnLayoutText(
+      List<SunmiCustomTextColumn> columns, int padding) async {
+    _printImage(columnLayoutText(columns, padding));
+  }
+
+  static Future<void> printWidgets(List<PrinterCustomWidget> widgets) async {
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+    double sumHeight = 0;
+    for (var item in widgets) {
+      final image = await item.picture.toImage(paperWidth.toInt(), item.height);
+      canvas.drawImage(image, Offset(0, sumHeight), Paint());
+      sumHeight += item.height;
+    }
+    final picture = recorder.endRecording();
+    await _printImage(
+        PrinterCustomWidget(picture: picture, height: sumHeight.toInt()));
+  }
+
+  static double _getVerticalPosition(
+      SunmiColAlign align, double height, double totalHeight) {
+    switch (align) {
+      case SunmiColAlign.top:
+        return 0;
+      case SunmiColAlign.center:
+        return (totalHeight / 2) - (height / 2);
+      case SunmiColAlign.bottom:
+        return totalHeight - height;
+    }
+  }
 }
+
+class PrinterCustomText {
+  final TextSpan text;
+  final TextAlign textAlign;
+  PrinterCustomText({
+    required this.text,
+    required this.textAlign,
+  });
+}
+
+class PrinterCustomWidget {
+  final Picture picture;
+  final int height;
+  PrinterCustomWidget({
+    required this.picture,
+    required this.height,
+  });
+}
+
+class SunmiCustomTextColumn {
+  final PrinterCustomText text;
+  final int flex;
+  final SunmiColAlign align;
+  SunmiCustomTextColumn(
+      {required this.text, this.flex = 1, this.align = SunmiColAlign.top});
+}
+
+enum SunmiColAlign { top, center, bottom }
