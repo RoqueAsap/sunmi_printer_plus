@@ -571,6 +571,11 @@ class SunmiPrinter {
     await printImage(imageUint8List);
   }
 
+  /// Skip [n] lines
+  static Future<void> emptyLines(int n) async {
+    await lineWrap(n);
+  }
+
   static PrinterCustomWidget customText(PrinterCustomText customPrint) {
     final TextPainter textPainter = TextPainter(
         text: customPrint.text,

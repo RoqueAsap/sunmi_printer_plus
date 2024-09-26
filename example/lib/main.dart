@@ -1,13 +1,9 @@
-import 'dart:typed_data';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sunmi_printer_plus/column_maker.dart';
-import 'package:sunmi_printer_plus/enums.dart';
 import 'dart:async';
 
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
-import 'package:sunmi_printer_plus/sunmi_style.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,8 +55,7 @@ class _HomeState extends State<Home> {
                 await SunmiPrinter.initPrinter();
                 await SunmiPrinter.startTransactionPrint(true);
 
-                await _printOrderHeader();
-                await SunmiPrinter.printText("HELLOOO THERE");
+                // await _printOrderHeader();
 
                 // await SunmiPrinter.printW('1234567890',
                 //     barcodeType: SunmiBarcodeType.CODE128,
@@ -142,106 +137,4 @@ Future<List<int>> _customEscPos() async {
   bytes += generator.cut();
 
   return bytes;
-}
-
-class PrinterStyles {
-  // static const textStyleNormalXD = TextStyle(
-  //   fontSize: 12,
-  //   color: Colors.black,
-  //   // fontFamily: AppFonts.nunitoSans,
-  //   fontWeight: FontWeight.w400,
-  // );
-
-  static const textStyleNormal = TextStyle(
-    fontSize: 12,
-    color: Colors.black,
-    // fontFamily: AppFonts.nunitoSans,
-    fontWeight: FontWeight.w500,
-  );
-
-  static const textStylePrincipal = TextStyle(
-    fontSize: 12,
-    color: Colors.black,
-    // fontFamily: AppFonts.nunitoSans,
-    fontWeight: FontWeight.w900,
-  );
-}
-
-Future<void> _printOrderHeader() async {
-  await SunmiPrinter.lineWrap(1);
-  await SunmiPrinter.printWidgets([
-    SunmiPrinter.customText(PrinterCustomText(
-        text: TextSpan(
-            text: "COPIA AL CAJERO",
-            style: PrinterStyles.textStyleNormal
-                .copyWith(fontWeight: FontWeight.w900, fontSize: 14)),
-        textAlign: TextAlign.center)),
-    SunmiPrinter.customText(PrinterCustomText(
-        text: TextSpan(
-          text: "24/09/24 02:34 PM",
-          style: PrinterStyles.textStyleNormal,
-        ),
-        textAlign: TextAlign.center)),
-  ]);
-  await SunmiPrinter.printWidgets([
-    SunmiPrinter.customText(PrinterCustomText(
-        text: TextSpan(
-            text: "Cliente: ",
-            style: PrinterStyles.textStyleNormal,
-            children: [
-              TextSpan(
-                  text: "QA - Milagros De Los Angeles Cedeno Sanguillen",
-                  style: const TextStyle(fontWeight: FontWeight.w900)),
-            ]),
-        textAlign: TextAlign.left)),
-    SunmiPrinter.customText(PrinterCustomText(
-        text: TextSpan(
-            text: "ID 1100079334",
-            style: PrinterStyles.textStyleNormal.copyWith(
-                fontWeight: FontWeight.w900, fontSize: 16, height: 1.4)),
-        textAlign: TextAlign.left)),
-    SunmiPrinter.customText(PrinterCustomText(
-        text:
-            TextSpan(text: "924 ordenes", style: PrinterStyles.textStyleNormal),
-        textAlign: TextAlign.left)),
-  ]);
-  await SunmiPrinter.niceHr(size: 2);
-  await SunmiPrinter.lineWrap(1);
-  await SunmiPrinter.printWidgets([
-    SunmiPrinter.customText(PrinterCustomText(
-        text: TextSpan(
-            text: "Direccion: ",
-            style: PrinterStyles.textStyleNormal,
-            children: [
-              TextSpan(
-                  text:
-                      "alguna duireccion lo suficientemente larga para que parezca que funciona correctamente esto aunque sea solo una prueba",
-                  style: const TextStyle(fontWeight: FontWeight.w900)),
-            ]),
-        textAlign: TextAlign.left)),
-    SunmiPrinter.customText(PrinterCustomText(
-        text: TextSpan(
-            text: "Telefono: ",
-            style: PrinterStyles.textStyleNormal,
-            children: [
-              TextSpan(
-                  text: '+507 6043 - 6014',
-                  style: const TextStyle(fontWeight: FontWeight.w900)),
-            ]),
-        textAlign: TextAlign.left)),
-  ]);
-  await SunmiPrinter.niceHr(size: 2);
-  await SunmiPrinter.lineWrap(1);
-  await SunmiPrinter.printCustomText(PrinterCustomText(
-      text: TextSpan(text: "ORDEN", style: PrinterStyles.textStylePrincipal),
-      textAlign: TextAlign.center));
-  await SunmiPrinter.niceHr(size: 2);
-  await SunmiPrinter.printCustomText(
-    PrinterCustomText(
-        text: const TextSpan(
-          text: " ",
-          style: PrinterStyles.textStyleNormal,
-        ),
-        textAlign: TextAlign.left),
-  );
 }
