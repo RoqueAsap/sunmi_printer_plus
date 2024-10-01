@@ -645,12 +645,12 @@ class SunmiPrinter {
   }
 
   static Future<void> printCustomText(PrinterCustomText customPrint) async {
-    _printImage(customText(customPrint));
+    await _printImage(customText(customPrint));
   }
 
   static Future<void> printColumnLayoutText(
       List<SunmiCustomTextColumn> columns, int padding) async {
-    _printImage(columnLayoutText(columns, padding));
+    await _printImage(columnLayoutText(columns, padding));
   }
 
   static Future<void> printWidgets(List<PrinterCustomWidget> widgets) async {
